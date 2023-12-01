@@ -33,21 +33,42 @@ fn day2() {
                 break;
             }
             else {
+                let mut find = false;
                 for n in number_str {
                     if n.len() + i >= line.len() {
                         continue;
                     }
                     let a = &line[i..i+n.len()];
                     if a == n {
+                        find = true;
                         break;
                     }
                 }
+                if find {
+                    break;
+                }
             }
         }
-        for c in line.chars().rev() {
+        for (i,c) in line.chars().rev().enumerate() {
             if c.is_numeric() {
                 res += c.to_digit(10).unwrap();
                 break;
+            }
+            else {
+                let mut find = 0;
+                for (k, n) in number_str.iter().enumerate() {
+                    if (i as i8) - (n.len() as i8) < 0 {
+                        continue;
+                    }
+                    let a = &line[i-n.len()..i+1];
+                    if *a == **n {
+                        find = k;
+                        break;
+                    }
+                }
+                if find != 0 {
+                    break;
+                }
             }
         }
     }
