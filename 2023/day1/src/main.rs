@@ -33,18 +33,19 @@ fn day2() {
                 break;
             }
             else {
-                let mut find = false;
-                for n in number_str {
+                let mut find = -1;
+                for (k , n) in number_str.iter().enumerate() {
                     if n.len() + i >= line.len() {
                         continue;
                     }
                     let a = &line[i..i+n.len()];
-                    if a == n {
-                        find = true;
+                    if *a == **n {
+                        find = k as i32;
                         break;
                     }
                 }
-                if find {
+                if find != -1 {
+                    res += (find+1) as u32 * 10;
                     break;
                 }
             }
@@ -55,18 +56,20 @@ fn day2() {
                 break;
             }
             else {
-                let mut find = 0;
+                let mut find = -1;
                 for (k, n) in number_str.iter().enumerate() {
-                    if (i as i8) - (n.len() as i8) < 0 {
+                    if line.len()-i-n.len() > line.len()-i+1  {
                         continue;
                     }
-                    let a = &line[i-n.len()..i+1];
-                    if *a == **n {
-                        find = k;
+                    let a = &line[line.len()-i-n.len()..line.len()-i];
+                    if a == *n {
+                        find = k as i32;
+                        println!("{} {}", a, n);
                         break;
                     }
                 }
-                if find != 0 {
+                if find != -1 {
+                    res += find as u32 +1;
                     break;
                 }
             }
