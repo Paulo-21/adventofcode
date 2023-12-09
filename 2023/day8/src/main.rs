@@ -1,5 +1,4 @@
-use core::time;
-use std::{fs, collections::{BTreeMap}};
+use std::{fs, collections::BTreeMap};
 #[derive(Debug)]
 struct Node {
     left : String,
