@@ -142,87 +142,8 @@ fn get_next_nodes(map : &Vec<Vec<char>>, from_node : &(usize, usize, Direction))
     }
 
 }
-fn get_next_nodes2(map : &Vec<Vec<char>>, from_node : &(usize, usize, Direction), alvisit : &mut Vec<Vec<TileType>>) -> Option<(usize, usize, Direction)> {
-    //println!("{}", map[from_node.0][from_node.1]);
-    
-    match map[from_node.0][from_node.1] {
-        '|' => {
-            match from_node.2 {
-                Direction::DOWN => {
-                    return Some((from_node.0+1, from_node.1, from_node.2 ));
-                },
-                Direction::UP => {
-                    return Some((from_node.0-1, from_node.1, from_node.2 ));
-                },
-                _ => { return None; }
-            }
-        },
-        '-' => {
-            match from_node.2 {
-                Direction::LEFT => {
-                    return Some((from_node.0, from_node.1-1, from_node.2 ));
-                },
-                Direction::RIGHT => {
-                    return Some((from_node.0, from_node.1+1, from_node.2 ));
-                },
-                _ => { return None; }
-            }
-        },
-        'L' => {
-            match from_node.2 {
-                Direction::DOWN => {
-                    return Some((from_node.0, from_node.1+1, Direction::RIGHT ));
-                },
-                Direction::LEFT => {
-                    return Some((from_node.0-1, from_node.1, Direction::UP ));
-                },
-                _ => { return None; }
-            }
-        },
-        'J' => {
-            match from_node.2 {
-                Direction::DOWN => {
-                    return Some((from_node.0, from_node.1-1, Direction::LEFT ));
-                },
-                Direction::RIGHT => {
-                    return Some((from_node.0-1, from_node.1, Direction::UP ));
-                },
-                _ => { return None; }
-            }
-        },
-        '7' => {
-            match from_node.2 {
-                Direction::UP => {
-                    return Some((from_node.0, from_node.1-1, Direction::LEFT ));
-                },
-                Direction::RIGHT => {
-                    return Some((from_node.0+1, from_node.1, Direction::DOWN ));
-                },
-                _ => { return None; }
-            }
-        },
-        'F' => {
-            match from_node.2 {
-                Direction::UP => {
-                    return Some((from_node.0, from_node.1+1, Direction::RIGHT ));
-                },
-                Direction::LEFT => {
-                    return Some((from_node.0+1, from_node.1, Direction::DOWN ));
-                },
-                _ => { return None; }
-            }
-        },
-        'S'=>{
-            println!("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-            return None;
-        }
-        _=> {
-            return None;
-        }
-    }
 
-}
-fn get_next_nodes3(map : &Vec<Vec<char>>, from_node : &(usize, usize, Direction), alvisit : &mut Vec<Vec<TileType>>) -> Option<(usize, usize, Direction)> {
+fn get_next_nodes2(map : &Vec<Vec<char>>, from_node : &(usize, usize, Direction), alvisit : &mut Vec<Vec<TileType>>) -> Option<(usize, usize, Direction)> {
     //println!("{}", map[from_node.0][from_node.1]);
     
     match map[from_node.0][from_node.1] {
@@ -409,7 +330,7 @@ fn p2() {
     while to_visit.len() > 0 {
         let node = to_visit.pop().unwrap();
         //println!("{} {} {:?}", node.0, node.1, node.2);
-        match get_next_nodes3(&map, &node, &mut already_visit) {
+        match get_next_nodes2(&map, &node, &mut already_visit) {
             Some(n) => {
                 to_visit.push(n);
             },
