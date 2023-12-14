@@ -2,7 +2,7 @@ use std::{fs, cmp::{min, max}};
 
 
 fn p1_2(len_of_empty : i64) {
-    let file = fs::read_to_string("input").unwrap();
+    let file = fs::read_to_string("input2").unwrap();
     let mut empty_column_index = vec![true;140];
     let mut empty_row_index = vec![true;140];
     let mut galaxy_coord = Vec::new();
