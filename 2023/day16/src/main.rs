@@ -1,4 +1,4 @@
-use std::{fs, collections::{HashMap, HashSet}, thread::current, cmp::max};
+use std::{fs, collections::HashSet, cmp::max};
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 enum Direction {
