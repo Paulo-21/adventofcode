@@ -113,9 +113,9 @@ fn p2() {
     }
     let range = [(1, 4000), (1,4000), (1,4000), (1,4000)];
     res = rec(&workflow, range, "in".to_string());
-    
     println!("{}", res);
 }
+
 
 fn main() {
     p2();
