@@ -1,0 +1,17 @@
+[package]
+name = "day23"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rustworkx-core = "0.13.2"
+hashbrown = "0.14"
+fixedbitset = "0.4.2"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip=true
+panic = 'abort'
