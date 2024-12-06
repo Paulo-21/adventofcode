@@ -1,4 +1,5 @@
-use std::fs;
+use std::{collections::HashSet, fs};
+#[derive(Clone, Copy)]
 struct GardePpos {
     i:i32,
     j:i32,
@@ -27,25 +28,20 @@ fn main() {
             garde_pos = GardePpos{i: i as i32,j:pos as i32, d};
         }
     }
+    let garde_save = garde_pos;
     let imax = map.len() as i32;
     let jmax = map[0].len() as i32;
     let mut marque: Vec<Vec<bool>> = vec![vec![false;map[0].len()];map.len()];
-    let mut i = 0;
+
     let rd = rotate.iter().position(|d| *d == garde_pos.d).unwrap();
     rotate.rotate_left(rd);
     let mut done = false;
     while !done {
         if is_outside(&garde_pos, (0,0), imax, jmax) { break; }
-
         marque[garde_pos.i as usize][garde_pos.j as usize] = true;
-        
-        //rotate.rotate_left(rd);
         for _ in 0..4 {
             let pas = match garde_pos.d {
-                D::U => (-1,0),
-                D::D => (1,0),
-                D::L => (0,-1),
-                D::R => (0,1),
+                D::U => (-1,0), D::D => (1,0), D::L => (0,-1), D::R => (0,1),
             };
             if !is_outside(&garde_pos, pas, imax, jmax) && map[(garde_pos.i+pas.0) as usize][(garde_pos.j+pas.1) as usize] != '#' {
                 garde_pos.i += pas.0;
@@ -55,25 +51,26 @@ fn main() {
             rotate.rotate_left(1);
             garde_pos.d = rotate[0];
         }
-        i+=1;
     }
-
-
     let mut nb_mark = 0;
-    for l in &marque {
-        for m in l {
-            if *m { nb_mark +=1; }
-        }
-    }
+    for l in &marque { for m in l { if *m { nb_mark +=1; } } }
     println!("{nb_mark}");
-    //print_itmap(map, marque);
 
+
+
+
+    //print_itmap(map, marque);
+    
+}
+
+fn rec(map : &Vec<Vec<char>>, garde : GardePpos) -> bool {
+    true
 }
 
 fn is_outside (garde : &GardePpos, pas : (i32,i32), imax: i32, jmax: i32) -> bool {
     garde.i+pas.0 < 0 || garde.i+pas.0 >= imax || garde.j+pas.1 < 0 || garde.j+pas.1 >= jmax
 }
-fn print_itmap(map : Vec<Vec<char>>, itmap : Vec<Vec<bool>>) {
+fn _print_itmap(map : Vec<Vec<char>>, itmap : Vec<Vec<bool>>) {
     for (i,l) in map.iter().enumerate() {
         for (j,k) in l.iter().enumerate() {
             if *k == '#' { print!("#"); }
