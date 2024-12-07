@@ -1,0 +1,29 @@
+
+        /*if i > 10000 {
+            println!("-----------------------------------------------");
+            let mut mappr = map.clone();
+            for pt in detectloop {
+                match pt.d {
+                    D::U => {mappr[pt.i as usize][pt.j as usize] = '^';}
+                    D::D => {mappr[pt.i as usize][pt.j as usize] = 'v'}
+                    D::L => {mappr[pt.i as usize][pt.j as usize] = '<'}
+                    D::R => {mappr[pt.i as usize][pt.j as usize] = '>'}
+                }
+            }
+            mappr[garde_pos.i as usize][garde_pos.j as usize] ='L';
+            mappr[first.i as usize][first.j as usize] ='F';
+            mappr[o.0 as usize][o.1 as usize] ='O';
+            for (i,l) in mappr.iter().enumerate() {
+                for (j,k) in l.iter().enumerate() {
+                    if *k == '.' { print!("{}", *k);}
+                    else if *k == 'F' { print!("{}", (*k).cyan());}
+                    else if *k == 'O' { print!("{}", (*k).green());}
+                    else if *k == '#' { print!("{}", (*k).blue());}
+                    else { print!("{}", (*k).red());}
+                }
+                println!();
+            }
+            println!("---------------------------------");
+            return true;
+        }
+        */

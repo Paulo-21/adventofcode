@@ -1,5 +1,4 @@
 use std::{collections::BTreeSet, fs};
-//use colored::Colorize;
 use owo_colors::OwoColorize;
 #[derive(Debug,Clone, Copy,PartialEq, Eq, Hash, PartialOrd, Ord)]
 struct GardePos {
@@ -11,7 +10,7 @@ struct GardePos {
 enum D {
     U,D,L,R,
 }
-fn main() { 
+fn main() {
     let input = fs::read_to_string("input").unwrap();
     //let input = fs::read_to_string("exemple").unwrap();
     //let input = fs::read_to_string("exemple2").unwrap();
@@ -60,63 +59,46 @@ fn main() {
     println!("{nb_mark}");
 //----------------------P2------------------------
     let mut nb_loop = 0;
-    let mut garde_pos = garde_save;
-    let imax = map.len() as i32;
-    let jmax = map[0].len() as i32;
-    let rd = rotate.iter().position(|d| *d == garde_pos.d).unwrap();
-    rotate.rotate_left(rd);
-    let mut choosen_obs = BTreeSet::new();
-    let mut done = false;
-    //let mut already_turn = false;
-    while !done {
-        if is_outside(&garde_pos, (0,0), imax, jmax) { break; }        
-        for _ in 0..4 {
-            let pas = match garde_pos.d {
-                D::U => (-1,0), D::D => (1,0), D::L => (0,-1), D::R => (0,1),
-            };
-            if !is_outside(&garde_pos, pas, imax, jmax) && map[(garde_pos.i+pas.0) as usize][(garde_pos.j+pas.1) as usize] != '#' {
-                let obs = (garde_pos.i+pas.0, garde_pos.j+pas.1);
-                if rec(&map, garde_pos,obs) {
-                    if !choosen_obs.contains(&obs) {
-                        choosen_obs.insert(obs);
-                        nb_loop+=1;
-                    }
+    
+    for (i,line) in marque.iter().enumerate() {
+        for (j,m) in line.iter().enumerate() {
+            if *m {
+                if garde_save.i == i as i32 && garde_save.j == j as i32 { continue; }
+                map[i][j] = '#';
+                if simulation(&map, garde_save) {
+                    nb_loop+=1;
                 }
-                garde_pos.i += pas.0;
-                garde_pos.j += pas.1;
-                break;
-            } else if is_outside(&garde_pos, pas, imax, jmax) { done = true; break; }
-            //if !already_turn { already_turn = true; }
-            rotate.rotate_left(1);
-            garde_pos.d = rotate[0];
+                map[i][j] = '.';
+            }
         }
     }
-    for (i,l) in map.iter().enumerate() {
-        for (j,k) in l.iter().enumerate() {
-            if *k == '#' { print!("#"); }
-            else if *k == '^' || *k == 'v' || *k == '<' || *k == '>'  { print!("{}",*k); }
-            else if choosen_obs.get(&(i as i32,j as i32)).is_some() { print!("o")}
+    
+    /*for l in map {
+        for k in l {
+            if k == '#' { print!("#"); }
+            else if k == '^' || k == 'v' || k == '<' || k == '>'  { print!("{}",k); }
+            //else if choosen_obs.get(&(i as i32,j as i32)).is_some() { print!("o") }
             else { print!("."); }
         }
         println!();
-    }
+    }*/
 
     println!("{nb_loop}"); 
 }
 
-fn rec(map : &Vec<Vec<char>>, mut garde_pos : GardePos, o : (i32,i32)) -> bool {//1686 to hight be same as other
-    let mut done = false;//1592 HIGHT
+fn simulation(map : &[Vec<char>], mut garde_pos : GardePos,) -> bool {//1686 to hight be same as other
+    //let done = false;//1592 HIGHT
     let imax = map.len() as i32;
     let jmax = map[0].len() as i32;
     let mut rotate = [D::U,D::R,D::D,D::L];
     let rd = rotate.iter().position(|d| *d == garde_pos.d).unwrap();
     rotate.rotate_left(rd);
-    let first = garde_pos;
+    
     let mut detectloop: BTreeSet<GardePos> = BTreeSet::new();
-    while !done {
+    loop {
         if is_outside(&garde_pos, (0,0), imax, jmax) { break; }
         if detectloop.contains(&garde_pos) {
-            println!("-----------------------------------------------");
+            /*println!("-----------------------------------------------");
             let mut mappr = map.clone();
             for pt in detectloop {
                 match pt.d {
@@ -139,32 +121,25 @@ fn rec(map : &Vec<Vec<char>>, mut garde_pos : GardePos, o : (i32,i32)) -> bool {
                 }
                 println!();
             }
-            println!("---------------------------------");
+            println!("---------------------------------");*/
             return true;
         }
-        
-        let save = garde_pos;
+        detectloop.insert(garde_pos);
         //println!("--------------------");
         //println!("first : {:?}", garde_pos);
-        for _ in 0..4 {
+        for _blockiter in 0..4 {
             let pas = match garde_pos.d {
                 D::U => (-1,0), D::D => (1,0), D::L => (0,-1), D::R => (0,1),
             };
-            if !is_outside(&garde_pos, pas, imax, jmax) && map[(garde_pos.i+pas.0) as usize][(garde_pos.j+pas.1) as usize] != '#' && !(garde_pos.i+pas.0 == o.0 && garde_pos.j+pas.1==o.1) {
-                detectloop.insert(garde_pos);
+            if !is_outside(&garde_pos, pas, imax, jmax) && map[(garde_pos.i+pas.0) as usize][(garde_pos.j+pas.1) as usize] != '#' {
                 garde_pos.i += pas.0;
                 garde_pos.j += pas.1;
                 break;
             } else if is_outside(&garde_pos, pas, imax, jmax) { return false; }
-            //else if map[(garde_pos.i+pas.0) as usize][(garde_pos.j+pas.1) as usize] == '#' || (garde_pos.i+pas.0 == o.0 && garde_pos.j+pas.1==o.1) {}
             rotate.rotate_left(1);
             garde_pos.d = rotate[0];
-            //println!(" rot : {:?}", garde_pos);
         }
-        if save == garde_pos {
-            //println!("save : {:?}", save);
-            println!("PROO");
-        }
+        
     }
     false
 }
