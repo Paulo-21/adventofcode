@@ -1,7 +1,8 @@
-use std::fs;
+use core::f32;
+use std::{collections::HashSet, fs};
 use regex::Regex;
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone, Copy)]
 struct Robot {
     p : (i32,i32),
     v : (i32,i32),
@@ -17,7 +18,7 @@ fn main() {
     let rep = Regex::new(r"p=(\d+),(\d+)").unwrap();
     let rev = Regex::new(r"v=(-?\d+),(-?\d+)").unwrap();
     let mut robots  = Vec::new();
-    let step = 100000000;
+    let step = 10000;
     for line in input.lines() {
         let (pos, velo) = line.split_once(" ").unwrap();
         let mut robot = Robot::default();
@@ -34,15 +35,13 @@ fn main() {
             robot.v.0 = y;
             robot.v.1 = x;
         }
-        if robot.p.0 == 4 && robot.p.1 == 2 && robot.v.0 == -3 {
-        }
         robots.push(robot);
 
     }
-    
-    for sec in 0..step {
-        println!("After {} s", sec);
-        print_map(&robots, ymax, xmax);
+    for sec in 1..=step {
+        let mut s = HashSet::new();
+        //println!("After {} s", sec);
+        //print_map(&robots, ymax, xmax);
         for r in robots.iter_mut() {
             let mut ny = r.p.0 + r.v.0;
             let mut nx = r.p.1 + r.v.1;
@@ -58,14 +57,24 @@ fn main() {
             else if nx >= xmax {
                 nx = nx - xmax;
             }
-            
+
             r.p.0 = ny;
             r.p.1 = nx;
+            s.insert((ny,nx));
+        }
+        if sec == 100 {
+            compute_safety(&robots, ymax, xmax);
+        }
+        if s.len() == 500 { 
+            println!("SEC : {}", sec+1);
+            let snap  =robots.clone(); 
+            print_map(&snap, ymax, xmax);
         }
     }
-    print_map(&robots, ymax, xmax);
-    compute_safety(&robots, ymax, xmax);
-    
+    //print_map(&robots, ymax, xmax);
+    //print_map(&snapchot, ymax, xmax);
+    //compute_safety(&robots, ymax, xmax);
+    //compute_safety(&snapchot, ymax, xmax);
 }
 
 fn compute_safety(robots : &Vec<Robot>, ymax : i32, xmax : i32) {
@@ -76,18 +85,10 @@ fn compute_safety(robots : &Vec<Robot>, ymax : i32, xmax : i32) {
     let ymid = ymax/2;
     let xmid = xmax/2;
     for r in robots {
-        if r.p.0 < ymid && r.p.1 < xmid {
-            ur += 1;
-        }
-        else if r.p.0 < ymid && r.p.1 > xmid {
-            ul += 1;
-        }
-        else if r.p.0 > ymid && r.p.1 > xmid {
-            dr += 1;
-        }
-        else if r.p.0 > ymid && r.p.1 < xmid {
-            dl += 1;
-        }
+             if r.p.0 < ymid && r.p.1 < xmid { ur += 1; }
+        else if r.p.0 < ymid && r.p.1 > xmid { ul += 1; }
+        else if r.p.0 > ymid && r.p.1 > xmid { dr += 1; }
+        else if r.p.0 > ymid && r.p.1 < xmid { dl += 1; }
     }
     println!("{} {} {} {}", ul,ur,dl,dr);
     println!("{}", ul*ur*dl*dr);
